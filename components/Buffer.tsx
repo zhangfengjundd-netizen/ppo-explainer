@@ -71,9 +71,9 @@ export default function Buffer({ expanded }: { expanded: boolean }) {
     <>
       <div
         className="-ml-196 mt-4 rounded-2xl border-2 border-secondary bg-secondary/10 px-6 py-5 shadow-md"
-        style={{ width: expanded ? 920 : 860, height: expanded ? 670 : 292 }}
+        style={{ width: expanded ? 920 : 860, height: expanded ? 658 : 318 }}
       >
-        <div className={`flex h-full flex-col gap-4 ${expanded ? "pt-28" : "pt-1"}`}>
+        <div className={`flex h-full flex-col gap-3 ${expanded ? "pt-28" : "pt-1"}`}>
           <div className="relative">
             <button
               type="button"
@@ -91,11 +91,16 @@ export default function Buffer({ expanded }: { expanded: boolean }) {
           </div>
 
           <div className="rounded-xl border border-secondary/25 bg-base-100/70 px-4 py-4 shadow-sm">
-            <div className="mb-3 text-[11px] font-medium">
-              <span className="text-secondary">PPO Clip</span>
+            <div className="mb-2 flex items-start justify-between gap-4 text-[11px] font-medium">
+              <span className="pt-1 text-secondary">PPO Clip</span>
+              <div
+                ref={ref}
+                className="shrink-0 text-xs text-base-content/70 [&_.katex]:text-[0.95rem]"
+                aria-hidden="false"
+              />
             </div>
 
-            <svg viewBox="0 0 360 120" className="h-32 w-full" aria-hidden="true">
+            <svg viewBox="0 0 360 120" className="h-28 w-full" aria-hidden="true">
               <line
                 x1="24"
                 y1="58"
@@ -170,10 +175,6 @@ export default function Buffer({ expanded }: { expanded: boolean }) {
                 clip
               </text>
             </svg>
-
-            <div className="mt-3 flex justify-center">
-              <div ref={ref} className="text-sm text-base-content/70" aria-hidden="false" />
-            </div>
           </div>
         </div>
       </div>
