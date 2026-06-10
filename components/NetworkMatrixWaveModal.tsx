@@ -279,15 +279,6 @@ function VShapeMatrixWave({
     >
       <title>V 形 MatrixWave 权重图</title>
 
-      <path
-        d={`M ${left.x - 284} ${left.y - 274} L ${topLeftMid.x} ${topLeftMid.y} L ${topRightMid.x} ${topRightMid.y} L ${right.x + 284} ${right.y - 274}`}
-        fill="none"
-        stroke="rgba(76,120,216,0.12)"
-        strokeWidth="10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-
       <MatrixSegment
         segment={leftSegment}
         placement={leftPlacement}
@@ -337,21 +328,22 @@ function VShapeMatrixWave({
         domain={domain}
       />
 
-      <text x={topLeftMid.x - 8} y={topLeftMid.y - 148} textAnchor="middle" fontSize="13" fill="rgba(15,23,42,0.72)">
+      <text x={314} y={472} textAnchor="middle" fontSize="13" fill="rgba(15,23,42,0.72)">
         {leftSegment.label}
       </text>
-      <text x={centerX} y={centerY - diamondHalf - 24} textAnchor="middle" fontSize="13" fill="rgba(15,23,42,0.72)">
-        {centerSegment.label}
-      </text>
-      <text x={topRightMid.x + 8} y={topRightMid.y - 148} textAnchor="middle" fontSize="13" fill="rgba(15,23,42,0.72)">
-        {rightSegment.label}
-      </text>
-
-      <text x={topLeftMid.x - 28} y={topLeftMid.y - 122} textAnchor="middle" fontSize="13" fill="rgba(15,23,42,0.62)">
+      <text x={526} y={654} textAnchor="middle" fontSize="13" fill="rgba(15,23,42,0.72)">
         fc1
       </text>
-      <text x={topRightMid.x + 28} y={topRightMid.y - 122} textAnchor="middle" fontSize="13" fill="rgba(15,23,42,0.62)">
+
+      <text x={centerX} y={836} textAnchor="middle" fontSize="13" fill="rgba(15,23,42,0.72)">
+        {centerSegment.label}
+      </text>
+
+      <text x={1028} y={658} textAnchor="middle" fontSize="13" fill="rgba(15,23,42,0.72)">
         fc2
+      </text>
+      <text x={1186} y={474} textAnchor="middle" fontSize="13" fill="rgba(15,23,42,0.72)">
+        {rightSegment.label}
       </text>
     </svg>
   );
