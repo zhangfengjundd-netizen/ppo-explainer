@@ -5,7 +5,7 @@ import { extent, ticks } from "d3-array";
 import { scaleLinear } from "d3-scale";
 import { line as d3Line } from "d3-shape";
 
-import { findClosestMetricPoint, MetricPoint } from "@/lib/metrics";
+import { findClosestMetricPoint, getLatestMetricPoint, MetricPoint } from "@/lib/metrics";
 
 type MetricHoverState = {
   metricId: string;
@@ -20,6 +20,7 @@ type MetricMiniChartProps = {
   hoverState: MetricHoverState | null;
   onHoverChange: (hoverState: MetricHoverState | null) => void;
   valueFormatter: (value: number) => string;
+  currentStep?: number;
   referenceValue?: number;
   referenceLabel?: string;
   isEmphasized?: boolean;
@@ -37,6 +38,7 @@ export default function MetricMiniChart({
   hoverState,
   onHoverChange,
   valueFormatter,
+  currentStep,
   referenceValue,
   referenceLabel,
   isEmphasized = false,
@@ -84,13 +86,14 @@ export default function MetricMiniChart({
     return generator(data) ?? "";
   }, [data, xScale, yScale]);
 
+  const activeStep = hoverState?.step ?? currentStep ?? null;
   const highlightedPoint = useMemo(() => {
-    return findClosestMetricPoint(data, hoverState?.step ?? null);
-  }, [data, hoverState]);
+    return findClosestMetricPoint(data, activeStep);
+  }, [activeStep, data]);
 
   const xTicks = useMemo(() => ticks(xDomain[0], xDomain[1], 4), [xDomain]);
   const yTicks = useMemo(() => ticks(yDomain[0], yDomain[1], 3), [yDomain]);
-  const latestPoint = data[data.length - 1] ?? null;
+  const latestPoint = getLatestMetricPoint(data, activeStep);
   const active = hoverState?.metricId === metricId || isEmphasized;
 
   function handlePointerMove(event: MouseEvent<SVGRectElement>) {
@@ -155,7 +158,6 @@ export default function MetricMiniChart({
               color,
             }}
           >
-            {active ? "active" : "series"}
           </div>
         </div>
       </div>

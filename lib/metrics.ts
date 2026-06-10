@@ -48,6 +48,16 @@ export function findClosestMetricPoint(data: MetricPoint[], step: number | null)
   return bestPoint;
 }
 
+export function getLatestMetricPoint(data: MetricPoint[], step: number | null): MetricPoint | null {
+  const latestPoint = data[data.length - 1] ?? null;
+
+  if (step === null) {
+    return latestPoint;
+  }
+
+  return findClosestMetricPoint(data, step) ?? latestPoint;
+}
+
 export function formatMetricValue(metricId: string, value: number): string {
   switch (metricId) {
     case "clipfrac":
@@ -84,64 +94,4 @@ export function explainMetricValue(metricId: string, value: number): string {
     default:
       return "";
   }
-}
-
-export function summarizePolicyStability(
-  approxPoint: MetricPoint | null,
-  clipPoint: MetricPoint | null,
-): MetricSummary {
-  const approxValue = approxPoint?.value ?? 0;
-  const clipValue = clipPoint?.value ?? 0;
-
-  if (approxValue >= 0.01 || clipValue >= 0.1) {
-    return {
-      tone: "risk",
-      label: "aggressive update",
-      detail: "当前策略更新偏猛，很多样本更容易顶到 PPO 的裁剪边界。",
-    };
-  }
-
-  if (approxValue >= 0.005 || clipValue >= 0.02) {
-    return {
-      tone: "watch",
-      label: "watch the step",
-      detail: "更新还算可控，但已经能看出策略步长在抬头。",
-    };
-  }
-
-  return {
-    tone: "stable",
-    label: "stable",
-    detail: "这组样例里的策略更新总体比较克制，clip 压力也很低。",
-  };
-}
-
-export function summarizeCriticFit(
-  valueLossPoint: MetricPoint | null,
-  explainedVariancePoint: MetricPoint | null,
-): MetricSummary {
-  const valueLoss = valueLossPoint?.value ?? 0;
-  const explainedVariance = explainedVariancePoint?.value ?? 0;
-
-  if (explainedVariance < 0.05 || valueLoss >= 65) {
-    return {
-      tone: "risk",
-      label: "critic lagging",
-      detail: "critic 还没明显跟上，value head 对 returns 的解释力偏弱。",
-    };
-  }
-
-  if (explainedVariance < 0.3 || valueLoss >= 45) {
-    return {
-      tone: "watch",
-      label: "partial fit",
-      detail: "critic 在工作，但拟合质量还只是一般，值得继续观察。",
-    };
-  }
-
-  return {
-    tone: "stable",
-    label: "critic aligned",
-    detail: "critic 已经能较稳定地跟上回报结构。",
-  };
 }
