@@ -9,6 +9,7 @@ import Buffer from "@/components/Buffer";
 import Controller, { DEFAULT_STEP } from "@/components/Controller";
 import Environment from "@/components/Env";
 import PPOStoryPanel, { type NarrativeSectionId } from "@/components/PPOStoryPanel";
+import SpiralTrainingModal from "@/components/SpiralTrainingModal";
 
 function clamp(value: number, min = 0, max = 1) {
   return Math.min(max, Math.max(min, value));
@@ -20,6 +21,7 @@ export default function HomePage() {
   const [step, setStep] = useState(DEFAULT_STEP);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeNarrativeSection, setActiveNarrativeSection] = useState<NarrativeSectionId>("overview");
+  const [isSpiralOpen, setIsSpiralOpen] = useState(false);
   const narrativeRef = useRef<HTMLDivElement | null>(null);
   const mockupHeight = expanded ? 750 : 550;
   const mockupWidth = expanded ? 2000 : 1350;
@@ -48,10 +50,7 @@ export default function HomePage() {
       const progress = clamp((scrollY - progressStart) / progressRange);
       setScrollProgress(progress);
 
-      const sections = Array.from(
-        narrative.querySelectorAll<HTMLElement>("[data-story-section]"),
-      );
-
+      const sections = Array.from(narrative.querySelectorAll<HTMLElement>("[data-story-section]"));
       if (!sections.length) {
         return;
       }
@@ -298,9 +297,14 @@ export default function HomePage() {
           className="relative z-20 mx-auto flex w-full max-w-6xl justify-center px-4 pb-24 pt-[88vh] sm:px-6 lg:px-8"
         >
           <div className="w-full">
-            <PPOStoryPanel activeSectionId={activeNarrativeSection} />
+            <PPOStoryPanel
+              activeSectionId={activeNarrativeSection}
+              onOpenSpiral={() => setIsSpiralOpen(true)}
+            />
           </div>
         </section>
+
+        <SpiralTrainingModal open={isSpiralOpen} onClose={() => setIsSpiralOpen(false)} />
       </div>
     </>
   );

@@ -26,9 +26,7 @@ export default function DiagnosticsModal({
   }, []);
 
   useEffect(() => {
-    if (!open || !mounted) {
-      return;
-    }
+    if (!open || !mounted) return;
 
     const { body, documentElement } = document;
     const previousBodyOverflow = body.style.overflow;
@@ -49,17 +47,11 @@ export default function DiagnosticsModal({
     };
   }, [mounted, open]);
 
-  if (!open || !mounted) {
-    return null;
-  }
+  if (!open || !mounted) return null;
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-base-content/38 p-4 backdrop-blur-md">
-      <div
-        className="absolute inset-0"
-        aria-hidden="true"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0" aria-hidden="true" onClick={onClose} />
 
       <div
         role="dialog"
@@ -70,9 +62,7 @@ export default function DiagnosticsModal({
         <div className="flex items-start justify-between gap-4 border-b border-base-300/70 px-5 py-4">
           <div>
             <div className="text-sm font-semibold text-base-content">{title}</div>
-            {subtitle ? (
-              <div className="mt-1 text-sm text-base-content/65">{subtitle}</div>
-            ) : null}
+            {subtitle ? <div className="mt-1 text-sm text-base-content/65">{subtitle}</div> : null}
           </div>
 
           <button
@@ -80,7 +70,7 @@ export default function DiagnosticsModal({
             onClick={onClose}
             className="rounded-full border border-base-300 bg-base-100 px-3 py-1 text-xs font-semibold text-base-content/70 transition hover:bg-base-200"
           >
-            Close
+            关闭
           </button>
         </div>
 
