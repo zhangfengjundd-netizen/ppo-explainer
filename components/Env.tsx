@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 
-export default function Environment() {
+export default function Environment({ step }: { step: number }) {
     const [expandedPadding, setExpandedPadding] = useState(false);
 
     return (
-        <div className="inline-block -ml-10 tooltip tooltip-open tooltip-accent"
+        <div className="tooltip tooltip-open tooltip-accent inline-block"
             data-tip={`Environment：\n接收动作并返回新的状态、\n 奖励和终止信号。`}
             >
             <button
@@ -21,7 +21,7 @@ export default function Environment() {
                     {expandedPadding && (
                         <div>
                             <video
-                                src="/videos/2187.mp4"
+                                src={`/videos/${step}.mp4`}
                                 controls
                                 className="w-40 max-w-full h-auto rounded-md shadow-sm"
                             />
