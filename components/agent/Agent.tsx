@@ -58,10 +58,10 @@ type AgentProps = {
 };
 
 const COLORS = "var(--color-primary)";
-const OBS_DIM = 16;
+const OBS_DIM = 4;
 const HIDDEN_DIM = 64;
-const ACTION_DIM = 4;
-const HIDDEN_GROUPS = 16;
+const ACTION_DIM = 2;
+const HIDDEN_GROUPS = 4;
 const COLUMN_WIDTH = 26;
 
 function clamp(v: number, lo: number, hi: number) {

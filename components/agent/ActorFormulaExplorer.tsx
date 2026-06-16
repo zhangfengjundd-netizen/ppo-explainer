@@ -263,7 +263,7 @@ export default function ActorFormulaExplorer({
             <div className="mt-1 text-sm leading-6 text-base-content/72">{activeStage.narrative}</div>
           </div>
 
-          <div className="mt-4">
+          <div className={`mx-auto mt-4 ${activeStage.id === "obs" ? "max-w-[200px]" : ""}`}>
             <FormulaExpression tokens={activeStage.expression} onTileHover={onTileHover} />
           </div>
 
