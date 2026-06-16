@@ -99,22 +99,17 @@ export default function PPOStoryPanel({
       <article data-story-section="phases" className={sectionShellClass(activeSectionId === "phases")}>
         <div className="space-y-6">
           <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h3 className="text-2xl font-semibold text-base-content sm:text-3xl">CartPole 训练三阶段</h3>
-              <p className="mt-2 text-sm leading-6 text-base-content/65">
-                这里按当前训练记录里的四个指标做教学分段：approx_kl、clipfrac、value_loss、explained_variance。{" "}
-                <button
-                  type="button"
-                  onClick={onOpenSpiral}
-                  className="inline text-sm font-medium text-primary underline underline-offset-4 transition hover:text-primary/80"
-                >
-                  查看螺旋训练曲线
-                </button>
-              </p>
-            </div>
-            <span className="rounded-full border border-secondary/20 bg-secondary/10 px-3 py-1 text-xs font-medium text-secondary">
-              training view
-            </span>
+            <h3 className="text-2xl font-semibold text-base-content sm:text-3xl">CartPole 训练三阶段</h3>
+            <p className="mt-2 text-sm leading-6 text-base-content/65">
+              这里按当前训练记录里的四个指标做教学分段：approx_kl、clipfrac、value_loss、explained_variance。{" "}
+              <button
+                type="button"
+                onClick={onOpenSpiral}
+                className="inline text-sm font-medium text-primary underline underline-offset-4 transition hover:text-primary/80"
+              >
+                查看螺旋训练曲线
+              </button>
+            </p>
           </div>
 
           <div className="grid gap-4 lg:grid-cols-3">
