@@ -1,5 +1,6 @@
 "use client";
 
+import { type HeatmapPhaseId } from "@/lib/stateHeatmap";
 import { type NetworkKind, type TrainingPhaseId } from "@/lib/weightMatrix";
 
 export type NarrativeSectionId = "overview" | "phases" | "mapping";
@@ -16,6 +17,7 @@ type PPOStoryPanelProps = {
   activeSectionId?: NarrativeSectionId;
   onOpenSpiral?: () => void;
   onOpenMatrixWave?: (phaseId: TrainingPhaseId, networkKind: NetworkKind) => void;
+  onOpenStateHeatmap?: (phaseId: HeatmapPhaseId) => void;
 };
 
 const ppoOverview =
@@ -25,26 +27,29 @@ const phaseCards: PhaseCard[] = [
   {
     id: "early",
     title: "前期",
-    stepRange: "Step 51 - 1028",
-    summary: "策略仍在积极试探，更新幅度相对更大；critic 对回报结构的拟合还比较弱，训练主要处在摸索有效更新方向的阶段。",
+    stepRange: "训练 1 - 20000 步",
+    summary:
+      "策略仍在积极试探，更新幅度相对更大；critic 对回报结构的拟合还比较弱，训练主要处在摸索有效更新方向的阶段。",
     evidence:
       "approx_kl 均值约 0.000713，为三段中最高；clipfrac 仍有可见波动；value_loss 均值约 69.20 最高；explained_variance 均值仅约 0.059，接近 0。",
   },
   {
     id: "middle",
     title: "中期",
-    stepRange: "Step 1039 - 1638",
-    summary: "PPO 更新进入更稳的裁剪区间，策略步长明显收敛，critic 开始学到更有用的价值结构，训练节奏趋于平稳。",
+    stepRange: "训练 20001 - 40000 步",
+    summary:
+      "PPO 更新进入更稳的裁剪区间，策略步长明显收敛，critic 开始学到更有用的价值结构，训练节奏趋于平稳。",
     evidence:
       "approx_kl 均值降到约 0.000194，clipfrac 基本为 0，value_loss 均值回落到约 59.83，explained_variance 升至约 0.219。",
   },
   {
     id: "late",
     title: "后期",
-    stepRange: "Step 1649 - 2197",
-    summary: "训练进入相对成熟阶段，策略更新保持保守且稳定，critic 的价值估计更可靠，整体优化已经不再依赖大幅策略摆动。",
+    stepRange: "训练 40001 - 100000 步",
+    summary:
+      "训练进入相对成熟阶段，策略更新保持保守且稳定，critic 的价值估计更可靠，整体优化已经不再依赖大幅策略摆动。",
     evidence:
-      "approx_kl 维持低位，均值约 0.000281，clipfrac 仍接近 0，value_loss 进一步降到约 48.32，explained_variance 提升到约 0.324，为三段中最高。",
+      "approx_kl 维持低位，均值约 0.000281；clipfrac 仍接近 0；value_loss 进一步降到约 48.32；explained_variance 提升到约 0.324，为三段中最高。",
   },
 ];
 
@@ -77,10 +82,29 @@ function MatrixWaveTrigger({
   );
 }
 
+function TopActionButton({
+  children,
+  onClick,
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="rounded-xl border border-base-300 bg-base-100 px-4 py-2 text-sm font-medium text-base-content/75 transition hover:border-primary/30 hover:text-primary"
+    >
+      {children}
+    </button>
+  );
+}
+
 export default function PPOStoryPanel({
   activeSectionId = "overview",
   onOpenSpiral,
   onOpenMatrixWave,
+  onOpenStateHeatmap,
 }: PPOStoryPanelProps) {
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-16">
@@ -98,20 +122,18 @@ export default function PPOStoryPanel({
 
       <article data-story-section="phases" className={sectionShellClass(activeSectionId === "phases")}>
         <div className="space-y-6">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h3 className="text-2xl font-semibold text-base-content sm:text-3xl">CartPole 训练三阶段</h3>
-              <p className="mt-2 text-sm leading-6 text-base-content/65">
-                这里按当前训练记录里的四个指标做教学分段：approx_kl、clipfrac、value_loss、explained_variance。{" "}
-                <button
-                  type="button"
-                  onClick={onOpenSpiral}
-                  className="inline text-sm font-medium text-primary underline underline-offset-4 transition hover:text-primary/80"
-                >
-                  查看螺旋训练曲线
-                </button>
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="min-w-0 flex-1 space-y-3">
+              <div className="flex flex-wrap items-center gap-3">
+                <h3 className="text-2xl font-semibold text-base-content sm:text-3xl">CartPole 训练三阶段</h3>
+                <TopActionButton onClick={() => onOpenStateHeatmap?.("early")}>状态热力图</TopActionButton>
+                <TopActionButton onClick={onOpenSpiral}>查看螺旋训练曲线</TopActionButton>
+              </div>
+              <p className="text-sm leading-6 text-base-content/65">
+                这里按当前训练记录里的四个指标做教学分段：approx_kl、clipfrac、value_loss、explained_variance。
               </p>
             </div>
+
             <span className="rounded-full border border-secondary/20 bg-secondary/10 px-3 py-1 text-xs font-medium text-secondary">
               training view
             </span>
@@ -119,7 +141,10 @@ export default function PPOStoryPanel({
 
           <div className="grid gap-4 lg:grid-cols-3">
             {phaseCards.map((phase) => (
-              <article key={phase.id} className="flex h-full flex-col gap-3 rounded-2xl border border-base-300/80 bg-base-200/55 px-4 py-4">
+              <article
+                key={phase.id}
+                className="flex h-full flex-col gap-3 rounded-2xl border border-base-300/80 bg-base-200/55 px-4 py-4"
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-2">
                     <span className="inline-flex rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
