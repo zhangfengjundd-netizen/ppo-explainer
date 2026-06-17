@@ -1,5 +1,7 @@
 "use client";
 
+import { type ReactNode } from "react";
+
 import { type HeatmapPhaseId } from "@/lib/stateHeatmap";
 import { type NetworkKind, type TrainingPhaseId } from "@/lib/weightMatrix";
 
@@ -21,7 +23,7 @@ type PPOStoryPanelProps = {
 };
 
 const ppoOverview =
-  "PPO 是一种在策略梯度基础上加入裁剪约束的强化学习方法。它通过限制新旧策略比值的变化范围，让策略更新既能继续前进，又不至于一步跨得太猛，因此能在训练速度和稳定性之间取得更舒服的平衡。在这个项目里，Agent 负责展示 actor 和 critic 的网络结构，让读者看到动作分布与状态价值分别从哪里产生；Action 把 actor 输出的 logits 转成动作概率分布，并展示最终被采样执行的动作；Environment 对应 CartPole 的状态转移与奖励反馈，是整条训练信号链条的外部来源；PPO Buffer 承接采样轨迹、观察 clip 约束，并把训练稳定性的关键指标组织成可检查的证据。";
+  "PPO 是一种在策略梯度基础上加入裁剪约束的强化学习方法。它通过限制新旧策略比值的变化范围，让策略更新既能继续前进，又不至于一步跨得太猛，因此能在训练速度和稳定性之间取得更舒服的平衡。在这个项目里，Agent 负责展示 actor 和 critic 的网络结构，让读者看到动作分布与状态价值分别从哪里产生；动作采样与环境模块对应一步交互与反馈；PPO Buffer 承接采样轨迹、观察 clip 约束，并把训练稳定性的关键指标组织成可检查的证据。";
 
 const phaseCards: PhaseCard[] = [
   {
@@ -40,7 +42,7 @@ const phaseCards: PhaseCard[] = [
     summary:
       "PPO 更新进入更稳的裁剪区间，策略步长明显收敛，critic 开始学到更有用的价值结构，训练节奏趋于平稳。",
     evidence:
-      "approx_kl 均值降到约 0.000194，clipfrac 基本为 0，value_loss 均值回落到约 59.83，explained_variance 升至约 0.219。",
+      "approx_kl 均值降到约 0.000194；clipfrac 基本为 0；value_loss 均值回落到约 59.83；explained_variance 升至约 0.219。",
   },
   {
     id: "late",
@@ -86,7 +88,7 @@ function TopActionButton({
   children,
   onClick,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   onClick?: () => void;
 }) {
   return (
@@ -182,7 +184,7 @@ export default function PPOStoryPanel({
 
           <div className="rounded-2xl border border-primary/15 bg-primary/7 px-4 py-4 text-sm leading-6 text-base-content/72">
             <span className="font-semibold text-base-content">阅读顺序建议：</span>
-            先看顶部原始可视化里的 Agent、Action、Environment 和 Buffer，把 PPO 的基本流程串起来；再继续向下阅读，把训练阶段、指标证据和界面模块之间的对应关系补齐。
+            先看顶部原始可视化里的 Agent、动作采样、Environment 和 Buffer，把 PPO 的基本流程串起来；再继续向下阅读，把训练阶段、指标证据和界面模块之间的对应关系补齐。
           </div>
         </div>
       </article>

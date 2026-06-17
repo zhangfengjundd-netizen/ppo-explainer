@@ -83,8 +83,8 @@ const obsTile: TensorTileSpec = {
   id: "obs",
   kind: "vector",
   label: "输入观测 s",
-  shape: "(16)",
-  values: makeVector(16, 1.2, 0.95),
+  shape: "(4)",
+  values: makeVector(4, 0.9, 0.95),
   highlightTargets: {
     layers: ["obs"],
     routes: ["shared_actor"],
@@ -95,8 +95,8 @@ const w1Tile: TensorTileSpec = {
   id: "w1",
   kind: "matrix",
   label: "Actor fc1 权重",
-  shape: "(64, 16)",
-  values: makeMatrix(12, 16, 2.4),
+  shape: "(64, 4)",
+  values: makeMatrix(12, 4, 2.4),
   highlightTargets: {
     layers: ["actor_fc1"],
     routes: ["shared_actor"],
@@ -191,8 +191,8 @@ const wpTile: TensorTileSpec = {
   id: "wp",
   kind: "matrix",
   label: "策略头权重 W^(pi)",
-  shape: "(4, 64)",
-  values: makeMatrix(4, 16, 10.1),
+  shape: "(2, 64)",
+  values: makeMatrix(2, 16, 10.1),
   highlightTargets: {
     layers: ["actor_logits"],
     routes: ["actor_fc2_logits"],
@@ -203,8 +203,8 @@ const bpTile: TensorTileSpec = {
   id: "bp",
   kind: "bias",
   label: "策略头 bias",
-  shape: "(4)",
-  values: makeVector(4, 11.4, 0.42),
+  shape: "(2)",
+  values: makeVector(2, 11.4, 0.42),
   highlightTargets: {
     layers: ["actor_logits"],
     routes: ["actor_fc2_logits"],
@@ -215,8 +215,8 @@ const logitsTile: TensorTileSpec = {
   id: "logits",
   kind: "vector",
   label: "logits z",
-  shape: "(4)",
-  values: makeVector(4, 12.8, 1.15),
+  shape: "(2)",
+  values: makeVector(2, 12.8, 1.15),
   highlightTargets: {
     layers: ["actor_logits"],
     routes: ["actor_fc2_logits"],
@@ -227,14 +227,14 @@ const policyTile: TensorTileSpec = {
   id: "policy",
   kind: "probabilities",
   label: "策略分布 pi(a|s)",
-  shape: "(4)",
-  values: makeProbabilities(4, 13.2),
+  shape: "(2)",
+  values: makeProbabilities(2, 13.2),
   highlightTargets: {
     layers: ["actor_logits"],
     routes: ["actor_fc2_logits"],
   },
   selectedIndex: 1,
-  actionLabels: ["0", "1", "2", "3"],
+  actionLabels: ["0", "1"],
 };
 
 const actionTile: TensorTileSpec = {
@@ -247,7 +247,7 @@ const actionTile: TensorTileSpec = {
     routes: ["actor_fc2_logits"],
   },
   selectedIndex: 1,
-  actionLabels: ["0", "1", "2", "3"],
+  actionLabels: ["0", "1"],
 };
 
 export const actorFormulaStages: ActorFormulaStage[] = [
@@ -255,8 +255,8 @@ export const actorFormulaStages: ActorFormulaStage[] = [
     id: "obs",
     title: "输入观测",
     shortLabel: "obs",
-    formulaTex: String.raw`s \in \mathbb{R}^{16}`,
-    narrative: "先把环境状态向量整理成教学视图中的 16 维观测 s；它是 actor 和 critic 的共同输入。",
+    formulaTex: String.raw`s \in \mathbb{R}^{4}`,
+    narrative: "先把环境状态向量整理成教学视图中的 4 维观测 s；它是 actor 和 critic 的共同输入。",
     highlightTargets: {
       layers: ["obs"],
       routes: ["shared_actor"],
@@ -340,7 +340,7 @@ export const actorFormulaStages: ActorFormulaStage[] = [
     title: "策略头输出 logits",
     shortLabel: "logits",
     formulaTex: String.raw`z = W^{(\pi)} h^{(2)} + b^{(\pi)}`,
-    narrative: "策略头把隐藏表示映射到 4 个动作 logits；它们还不是概率，而是 softmax 之前的未归一化分数。",
+    narrative: "策略头把隐藏表示映射到 2 个动作 logits；它们还不是概率，而是 softmax 之前的未归一化分数。",
     highlightTargets: {
       layers: ["actor_logits"],
       routes: ["actor_fc2_logits"],
@@ -363,7 +363,7 @@ export const actorFormulaStages: ActorFormulaStage[] = [
 \pi_\theta(a \mid s) &= \operatorname{Softmax}(z) \\
 a &\sim \operatorname{Categorical}(\pi_\theta(\cdot \mid s))
 \end{aligned}`,
-    narrative: "把 logits 归一化成策略分布之后，agent 再从分类分布里采样动作 a；这一步正对应 ppo.py 里的 Categorical(logits=logits)。",
+    narrative: "把 logits 归一化成策略分布之后，agent 再从分类分布里采样动作 a。",
     highlightTargets: {
       layers: ["actor_logits"],
       routes: ["actor_fc2_logits"],
